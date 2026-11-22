@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cortex · Il ripasso di Medicina</title>
+<meta name="description" content="Flashcard, quiz, casi clinici e simulazioni d'esame per Medicina e Chirurgia, divisi per anno e semestre. Gratis e senza registrazione.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:title" content="Cortex · Il ripasso di Medicina">
+<meta property="og:description" content="Flashcard, quiz, casi clinici e simulazioni d'esame per ogni materia, divisi per anno e semestre.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#05070D">
+<link rel="icon" href="assets/cortex-32.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/cortex-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@1&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/stile.css?v=a18d2840">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<div class="scorrimento" aria-hidden="true"><i id="barra-scroll"></i></div>
+<div class="luce" aria-hidden="true"></div>
+<a class="salta" href="#percorso">Vai ai corsi</a>
+
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="logo" href="./" aria-label="Cortex, pagina iniziale">
+      <img src="assets/cortex-simbolo.png" alt="" width="36" height="36">
+      <span class="logo-testo"><b>Cortex</b></span>
+    </a>
+    <nav class="nav-link" aria-label="Sezioni">
+      <a href="#percorso">Anni e corsi</a>
+      <a href="#funzioni">Come funziona</a>
+    </nav>
+    <button class="nav-cerca" type="button" id="nav-cerca" aria-label="Cerca una materia o un argomento">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M20 20l-3.6-3.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+    <a class="btn-grad piccolo nav-cta" href="#percorso">I corsi</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="inizio">
+    <canvas class="campo" id="campo-sfondo" aria-hidden="true"></canvas>
+    <div class="hero-velo" aria-hidden="true"></div>
+
+    <div class="wrap hero-in">
+      <div class="hero-testo">
+        <a class="novita rivela" id="novita" href="#percorso" hidden></a>
+        <h1 class="titolo-parole" id="titolo">Il ripasso di Medicina, <em>anno per anno.</em></h1>
+        <p class="lead rivela" style="--r:2">Flashcard, quiz, casi clinici e simulazioni d'esame per ogni materia, ordinati per anno e semestre. Scegli il corso e inizia: i progressi si salvano da soli.</p>
+        <div class="cerca rivela" style="--r:3" id="cerca-box">
+          <div class="cerca-campo">
+            <svg class="lente" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M20 20l-3.6-3.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+            <input id="cerca" type="search" role="combobox" aria-expanded="false" aria-controls="suggerimenti" aria-autocomplete="list" aria-label="Cerca una materia o un argomento" placeholder="Cerca una materia o un argomento, es. cirrosi" data-corto="Cerca materia o argomento" autocomplete="off" spellcheck="false" enterkeyhint="search">
+            <kbd class="tasto" aria-hidden="true">/</kbd>
+          </div>
+          <div class="suggerimenti" id="suggerimenti" role="listbox" aria-label="Corsi trovati" hidden></div>
+        </div>
+        <div class="hero-azioni rivela" style="--r:4">
+          <a class="btn-grad" href="#percorso">Scegli il tuo anno <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="link-morbido" href="#funzioni">Come funziona</a>
+        </div>
+        <div class="numeri rivela" style="--r:5" id="numeri"></div>
+      </div>
+    </div>
+
+    <svg class="onda" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true">
+      <defs><linearGradient id="filo-a" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3DF5A6" stop-opacity="0"/><stop offset=".25" stop-color="#3DF5A6"/><stop offset=".6" stop-color="#5B8CFF"/><stop offset=".9" stop-color="#FF4D9D"/><stop offset="1" stop-color="#FF4D9D" stop-opacity="0"/></linearGradient></defs>
+      <path class="onda-fondo" d="M0,64 C180,96 360,100 540,78 C760,50 900,10 1110,22 C1260,31 1360,60 1440,72 L1440,100 L0,100 Z"><animate attributeName="d" dur="15s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1" values="M0,64 C180,96 360,100 540,78 C760,50 900,10 1110,22 C1260,31 1360,60 1440,72 L1440,100 L0,100 Z;M0,50 C190,74 370,104 560,90 C770,74 910,38 1110,42 C1270,45 1360,38 1440,56 L1440,100 L0,100 Z;M0,64 C180,96 360,100 540,78 C760,50 900,10 1110,22 C1260,31 1360,60 1440,72 L1440,100 L0,100 Z"/></path>
+      <path class="onda-filo" stroke="url(#filo-a)" d="M0,64 C180,96 360,100 540,78 C760,50 900,10 1110,22 C1260,31 1360,60 1440,72"><animate attributeName="d" dur="15s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1" values="M0,64 C180,96 360,100 540,78 C760,50 900,10 1110,22 C1260,31 1360,60 1440,72;M0,50 C190,74 370,104 560,90 C770,74 910,38 1110,42 C1270,45 1360,38 1440,56;M0,64 C180,96 360,100 540,78 C760,50 900,10 1110,22 C1260,31 1360,60 1440,72"/></path>
+    </svg>
+  </section>
+
+  <section class="wrap riprendi" id="riprendi" hidden aria-label="Riprendi lo studio"></section>
+
+  <section class="percorso" id="percorso">
+    <div class="wrap">
+      <div class="sez-testa rivela">
+        <p class="occhiello"><span>01</span>Il percorso</p>
+        <h2>Scegli il tuo <em>anno</em></h2>
+        <p class="sez-sotto">Dal Semestre Filtro al VI anno. Tocca una tappa per vedere i suoi corsi.</p>
+      </div>
+      <div class="sentiero rivela" id="sentiero"></div>
+      <p class="didascalia rivela" aria-hidden="true">conduzione saltatoria · il segnale salta da un anno all'altro</p>
+      <div class="pannello" id="pannello" role="tabpanel"></div>
+    </div>
+  </section>
+
+  <section class="nastro" id="nastro" hidden aria-label="Capitoli dentro i corsi">
+    <p class="nastro-et" id="nastro-et"></p>
+    <div class="nastro-riga" id="nastro-1"></div>
+    <div class="nastro-riga inverso" id="nastro-2"></div>
+  </section>
+
+  <section class="funzioni" id="funzioni">
+    <svg class="onda-su" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <defs><linearGradient id="filo-b" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FF4D9D" stop-opacity="0"/><stop offset=".3" stop-color="#FF4D9D"/><stop offset=".65" stop-color="#5B8CFF"/><stop offset="1" stop-color="#3DF5A6" stop-opacity="0"/></linearGradient></defs>
+      <path class="onda-fondo" d="M0,42 C240,4 430,74 720,48 C1010,22 1200,2 1440,32 L1440,90 L0,90 Z"><animate attributeName="d" dur="18s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1" values="M0,42 C240,4 430,74 720,48 C1010,22 1200,2 1440,32 L1440,90 L0,90 Z;M0,30 C250,28 440,54 720,62 C1000,70 1210,26 1440,46 L1440,90 L0,90 Z;M0,42 C240,4 430,74 720,48 C1010,22 1200,2 1440,32 L1440,90 L0,90 Z"/></path>
+      <path class="onda-filo" stroke="url(#filo-b)" d="M0,42 C240,4 430,74 720,48 C1010,22 1200,2 1440,32"><animate attributeName="d" dur="18s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1" values="M0,42 C240,4 430,74 720,48 C1010,22 1200,2 1440,32;M0,30 C250,28 440,54 720,62 C1000,70 1210,26 1440,46;M0,42 C240,4 430,74 720,48 C1010,22 1200,2 1440,32"/></path>
+    </svg>
+    <div class="wrap">
+      <div class="sez-testa rivela">
+        <p class="occhiello"><span>02</span>Come si studia</p>
+        <h2>Tutto quello che serve, <em>in un posto solo</em></h2>
+        <p class="sez-sotto">Ogni corso ha gli stessi strumenti: li impari una volta e valgono per tutte le materie.</p>
+      </div>
+
+      <div class="bento">
+        <article class="tile t-flash rivela">
+          <div class="tile-testo">
+            <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="6" width="13" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 3h10a3 3 0 0 1 3 3v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+            <h3>Flashcard che si ricordano di te</h3>
+            <p>Le carte che non sapevi tornano subito, quelle che sapevi ricompaiono domani e poi dopo 3, 7 e 16 giorni. Così ripassi solo quello che serve.</p>
+          </div>
+          <div class="mini mini-flash" aria-hidden="true">
+            <div class="mf-scena">
+              <div class="mf-carta">
+                <div class="mf-faccia mf-fronte"><span class="mf-tag">Flashcard</span><p>Forme di acalasia</p><span class="mf-tocca">Esofago · Disturbi della motilità esofagea</span></div>
+                <div class="mf-faccia mf-retro"><span class="mf-tag">Risposta</span><p>• Primitiva (idiopatica)<br>• Secondaria: tumori (del cardias), malattia di Chagas</p></div>
+              </div>
+            </div>
+            <div class="mf-voti"><span class="v-ko">Non la sapevo</span><span class="v-hard">Incerta</span><span class="v-ok">La sapevo</span></div>
+          </div>
+        </article>
+
+        <article class="tile t-quiz rivela" style="--r:1">
+          <div class="tile-testo">
+            <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12.5l2.6 2.6L16 9.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <h3>Quiz, vero/falso e domande aperte</h3>
+            <p>Ogni risposta ha la sua spiegazione. Nelle domande aperte scrivi come all'orale e poi controlli i punti chiave.</p>
+          </div>
+          <div class="mini mini-quiz" aria-hidden="true">
+            <p class="mq-q">Quale enzima permette a H. pylori di sopravvivere nell'ambiente gastrico?</p>
+            <div class="mq-opz"><span class="giusta">Ureasi</span><span>Catalasi</span><span>Lipasi</span><span>Coagulasi</span></div>
+          </div>
+        </article>
+
+        <article class="tile t-esame rivela" style="--r:2">
+          <div class="tile-testo">
+            <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+            <h3>Simula l'esame</h3>
+            <p>Domande miste a tempo, un minuto per domanda, voto in trentesimi e la correzione di ogni errore.</p>
+          </div>
+          <div class="mini mini-esame" aria-hidden="true">
+            <div class="me-voto"><b>28</b><span>/30</span></div>
+            <div class="me-info">
+              <span class="me-timer">30 domande · 30 minuti</span>
+              <div class="me-griglia"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="no"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="no"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="tile t-casi rivela">
+          <div class="tile-testo">
+            <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 3v6a4 4 0 0 0 8 0V3M9 13v2.5a5 5 0 0 0 10 0V13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="11" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
+            <h3>Casi clinici passo per passo</h3>
+            <p>A ogni domanda arrivano nuovi dati, come al letto del paziente.</p>
+          </div>
+          <div class="mini mini-caso" aria-hidden="true">
+            <div class="mc-paziente"><span class="mc-et">Il paziente</span><p>Donna di 42 anni con difficoltà a deglutire sia i solidi sia i liquidi da circa un anno.</p></div>
+            <div class="mc-nuovi"><span class="mc-et">Nuovi dati</span><p>Si esegue un RX dell'esofago con bario.</p></div>
+            <p class="mc-q">Quale reperto è atteso?</p>
+          </div>
+        </article>
+
+        <article class="tile t-confronti rivela" style="--r:1">
+          <div class="tile-testo">
+            <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="4" width="7.5" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="4" width="7.5" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5.5 8.5h2.5M16 8.5h2.5M5.5 12h2.5M16 12h2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+            <h3>Confronti tra quadri simili</h3>
+            <p>Assegni ogni voce alla sua categoria; alla fine c'è la tabella riassuntiva.</p>
+          </div>
+          <div class="mini mini-confronto" aria-hidden="true">
+            <p class="mx-voce">Contrazioni simultanee alternate a peristalsi normale</p>
+            <div class="mx-cat"><span>Acalasia</span><span class="giusta">Spasmi esofagei diffusi</span><span>Esofago a schiaccianoci</span></div>
+          </div>
+        </article>
+
+        <article class="tile t-prog rivela" style="--r:2">
+          <div class="tile-testo">
+            <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+            <h3>Sai sempre a che punto sei</h3>
+            <p>Per ogni capitolo: quanto hai visto, la padronanza, gli errori e le flashcard da rivedere.</p>
+          </div>
+          <div class="mini mini-prog" aria-hidden="true">
+            <div class="mpr"><span>Disfagia</span><i style="--v:86%"></i><b>86%</b></div>
+            <div class="mpr"><span>Cirrosi epatica</span><i style="--v:64%"></i><b>64%</b></div>
+            <div class="mpr"><span>Pancreatite acuta</span><i style="--v:41%"></i><b>41%</b></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <noscript><p class="wrap noscript">Per usare il sito attiva JavaScript nel browser.</p></noscript>
+</main>
+
+<footer class="piede">
+  <svg class="piede-onda" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="filo-c" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5B8CFF" stop-opacity="0"/><stop offset=".35" stop-color="#3DF5A6"/><stop offset=".7" stop-color="#FF4D9D"/><stop offset="1" stop-color="#FF4D9D" stop-opacity="0"/></linearGradient></defs>
+    <path class="onda-fondo" d="M0,52 C220,92 430,8 720,36 C1010,64 1220,6 1440,40 L1440,90 L0,90 Z"><animate attributeName="d" dur="21s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1" values="M0,52 C220,92 430,8 720,36 C1010,64 1220,6 1440,40 L1440,90 L0,90 Z;M0,40 C230,66 440,34 720,54 C1000,74 1230,30 1440,26 L1440,90 L0,90 Z;M0,52 C220,92 430,8 720,36 C1010,64 1220,6 1440,40 L1440,90 L0,90 Z"/></path>
+    <path class="onda-filo" stroke="url(#filo-c)" d="M0,52 C220,92 430,8 720,36 C1010,64 1220,6 1440,40"><animate attributeName="d" dur="21s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1" values="M0,52 C220,92 430,8 720,36 C1010,64 1220,6 1440,40;M0,40 C230,66 440,34 720,54 C1000,74 1230,30 1440,26;M0,52 C220,92 430,8 720,36 C1010,64 1220,6 1440,40"/></path>
+  </svg>
+  <div class="wrap piede-in">
+    <div class="piede-marchio">
+      <a class="logo" href="./">
+        <img src="assets/cortex-simbolo.png" alt="" width="36" height="36">
+        <span class="logo-testo"><b>Cortex</b></span>
+      </a>
+      <p>Materiale di studio preparato da studenti per studenti.</p>
+      <nav class="piede-anni" id="piede-anni" aria-label="Anni di corso"></nav>
+    </div>
+    <div class="piede-note">
+      <p>Non sostituisce libri di testo, lezioni e indicazioni dei docenti.</p>
+      <p>I progressi restano salvati nel browser che usi, senza bisogno di un account.</p>
+    </div>
+  </div>
+  <p class="piede-scritta" aria-hidden="true">Cortex</p>
+</footer>
+
+<div class="spotlight" id="spotlight" hidden>
+  <div class="spotlight-in" id="spotlight-in" role="dialog" aria-modal="true" aria-label="Cerca una materia o un argomento">
+    <p class="spotlight-aiuto" aria-hidden="true"><kbd>Esc</kbd> per chiudere</p>
+  </div>
+  <button class="spotlight-chiudi" id="spotlight-chiudi" type="button" aria-label="Chiudi la ricerca"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+</div>
+
+<script src="catalogo.js?v=a6d89f1a"></script>
+<script src="assets/hub.js?v=7d6a3ea7"></script>
+</body>
+</html>
