@@ -766,6 +766,12 @@ if(RIDOTTO) $$('svg').forEach(s=>{ try{ s.pauseAnimations(); }catch(e){} });
 // Non quando ricarichi la pagina o torni indietro: li' il browser rimette la pagina dov'era.
 const arrivo = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || null;
 const ricarica = arrivo ? (arrivo.type==='reload' || arrivo.type==='back_forward') : false;
+// dalla lente delle altre pagine (./#cerca) si arriva con il campo di ricerca gia' pronto
+if(location.hash==='#cerca'){
+  try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+  window.scrollTo(0,0);
+  setTimeout(()=>{ elCerca.focus({preventScroll:true}); }, 400);
+}
 if(annoDaIndirizzo()!==null && !ricarica){
   let fermo = -1;
   const vai = ()=>{ const el=$('#percorso'); if(el){ el.scrollIntoView({block:'start', behavior:'instant'}); fermo = window.scrollY; } };

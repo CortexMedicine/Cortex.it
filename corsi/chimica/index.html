@@ -454,6 +454,11 @@ html{scrollbar-color:#2A3350 #05070D}
 .piede-corso p{height:.76em;overflow:hidden;text-align:center;white-space:nowrap;font-family:var(--f-display);font-weight:800;font-size:clamp(3.2rem,16.5vw,17rem);line-height:.92;letter-spacing:-.05em;background:var(--fluo);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.3;-webkit-mask:linear-gradient(180deg,#000 10%,rgba(0,0,0,.25) 100%);mask:linear-gradient(180deg,#000 10%,rgba(0,0,0,.25) 100%);user-select:none}
 @media (max-width:760px){.piede-corso{padding-bottom:70px}}   /* sopra la barra per scegliere l'esercizio, sul telefono */
 
+/* ricaricamento a fine sessione: la pagina sfuma via e torna, senza lampi */
+html.in-uscita main{opacity:0;transform:translateY(6px);transition:opacity .16s ease-in,transform .16s ease-in}
+html.ricaricata main{animation:rientra .45s var(--morbido) both}
+@keyframes rientra{from{opacity:0;transform:translateY(8px)}}
+
 /* testata dei corsi: il simbolo di Cortex al posto del quadratino colorato
    (il percorso vale per le pagine in sito/corsi/<corso>/) */
 .brand-mark{width:38px;height:38px;border-radius:0;background:url(../../assets/cortex-simbolo.png) center/contain no-repeat;box-shadow:none;filter:drop-shadow(0 0 10px rgba(91,140,255,.35))}
@@ -2983,6 +2988,49 @@ showView(VIEWS.includes(startView)?startView:'studio');
 if(!D.parts.length){$('#tree').append(h('p',{class:'empty-note',text:'I contenuti non sono stati caricati. Ricarica la pagina.'}));}
 initCloud();
 if(window.claude&&typeof window.claude.use==='function'){window.claude.use('sample').then(sm=>{SAMPLE=sm||null;updateClaudeUI();}).catch(()=>{SAMPLE=null;});}
+/* Cortex: ponte dentro il codice del corso (costruisci.py lo inserisce in fondo al suo blocco).
+   Se si avvia una nuova sessione mentre ne e' aperta un'altra (per esempio «Rifai la sessione» o
+   «Ripeti gli errori» dalla schermata dei risultati), la pagina si ricarica e la sessione riparte
+   subito dopo, con le stesse domande. Ogni sessione conta cosi' come una nuova pagina vista.
+   Parte solo dal clic dell'utente sul pulsante. */
+;(function(){
+  const K = 'cortex-riparti';
+  const perId = a => a.map(it => it.id), daId = a => a.map(id => BYID.get(id)).filter(Boolean);
+  const elenco = [a => [perId(a[0]), a[1]], a => [daId(a[0]), a[1]]];
+  const MODI = {
+    startQuiz: elenco, startFlash: elenco, startOpen: elenco,
+    startCase: [a => [a[0].id], a => [CASEBY.get(a[0])]],
+    startCmp: [a => [a[0].id], a => [CMPBY.get(a[0])]]
+  };
+  const orig = {startQuiz, startFlash, startOpen, startCase, startCmp};
+  const valido = a => a && a[0] && (!Array.isArray(a[0]) || a[0].length > 0);
+  function avvia(nome, a){
+    const vSess = document.getElementById('v-sessione');
+    if(!SESS || !vSess || vSess.hidden) return orig[nome](...a);
+    let dati = null;
+    try{ dati = MODI[nome][0](a); }catch(e){}
+    if(!valido(dati)) return orig[nome](...a);
+    try{ sessionStorage.setItem(K, JSON.stringify({f: nome, a: dati})); }catch(e){ return orig[nome](...a); }
+    const da = SESS.from || CUR;
+    if(typeof window.__cortexRicarica === 'function') window.__cortexRicarica(da);
+    else { try{ history.replaceState(null, '', '#' + da); }catch(e){} location.reload(); }
+  }
+  startQuiz = (...a) => avvia('startQuiz', a);
+  startFlash = (...a) => avvia('startFlash', a);
+  startOpen = (...a) => avvia('startOpen', a);
+  startCase = (...a) => avvia('startCase', a);
+  startCmp = (...a) => avvia('startCmp', a);
+  // dopo il ricaricamento: riparte la sessione chiesta
+  let r = null;
+  try{ r = JSON.parse(sessionStorage.getItem(K) || 'null'); sessionStorage.removeItem(K); }catch(e){}
+  if(r && MODI[r.f]){
+    setTimeout(() => {
+      let a = null;
+      try{ a = MODI[r.f][1](r.a); }catch(e){}
+      if(valido(a)) orig[r.f](...a);
+    }, 0);
+  }
+})();
 })();
 </script>
 
@@ -2997,6 +3045,9 @@ if(window.claude&&typeof window.claude.use==='function'){window.claude.use('samp
   var doc = document, html = doc.documentElement;
   var RIDOTTO = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
   var FINE = !!(window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches);
+  var dopoRicarica = false;
+  try{ dopoRicarica = sessionStorage.getItem('cortex-ricarica') === '1'; sessionStorage.removeItem('cortex-ricarica'); }catch(e){}
+  if(dopoRicarica) html.classList.add('ricaricata');
   function crea(tag, cls, dentro){ var e = doc.createElement(tag); e.className = cls; if(dentro) e.innerHTML = dentro; e.setAttribute('aria-hidden', 'true'); return e; }
 
   // luci di fondo, barra di avanzamento, luce del puntatore
@@ -3018,7 +3069,34 @@ if(window.claude&&typeof window.claude.use==='function'){window.claude.use('samp
       var e = doc.createElement(k === parole.length - 1 && parole.length > 1 ? 'em' : 'span');
       e.className = 'p'; e.style.setProperty('--i', k); e.textContent = w; h.appendChild(e);
     });
-    if(!RIDOTTO) h.classList.add('pronto');
+    // dopo il ricaricamento di fine sessione il titolo non rientra: si torna allo studio, non si apre il corso
+    if(!RIDOTTO && !dopoRicarica) h.classList.add('pronto');
+  }
+
+  // sessioni: ogni volta che l'utente esce da una sessione (torna alla selezione, cambia scheda,
+  // termina) la pagina si ricarica. Conta come nuova pagina vista, quindi con nuovi annunci.
+  // «Rifai» e «Ripeti gli errori» passano da ponte-corso.js, che ricarica e fa ripartire la sessione.
+  // Parte sempre da un clic dell'utente: niente ricaricamenti automatici o a tempo, che AdSense vieta.
+  // Selezione, capitoli aperti e progressi restano: il corso li salva nel browser quando la pagina si chiude.
+  var inRicarica = false;
+  function ricarica(vista){
+    if(inRicarica) return;
+    inRicarica = true;
+    try{ sessionStorage.setItem('cortex-ricarica', '1'); }catch(e){}
+    try{ history.replaceState(null, '', '#' + (vista || 'studio')); }catch(e){}
+    html.classList.add('in-uscita');
+    setTimeout(function(){ location.reload(); }, RIDOTTO ? 0 : 160);
+  }
+  window.__cortexRicarica = ricarica;
+  var vSess = doc.getElementById('v-sessione');
+  if(vSess && window.MutationObserver){
+    new MutationObserver(function(rec){
+      // solo il passaggio da "sessione aperta" a "sessione chiusa" (oldValue null = prima era visibile)
+      var chiusa = rec.some(function(r){ return r.oldValue === null; }) && vSess.hidden;
+      if(!chiusa) return;
+      var scheda = doc.querySelector('.tabs a[aria-current="page"]');
+      ricarica(scheda ? scheda.dataset.view : 'studio');
+    }).observe(vSess, {attributes: true, attributeFilter: ['hidden'], attributeOldValue: true});
   }
 
   // barra di avanzamento della pagina
