@@ -8,7 +8,6 @@
 const CAT = window.CATALOGO || {corsi:[]};
 const CORSI = (CAT.corsi || []).slice().sort((a,b)=> a.anno-b.anno || a.semestre-b.semestre || a.titolo.localeCompare(b.titolo,'it'));
 const ROMANI = ['I','II','III','IV','V','VI'];
-const CHIAVE_ANNO = 'ripasso-medicina-anno';
 const GIORNO = 86400000;
 const NS = 'http://www.w3.org/2000/svg';
 const RIDOTTO = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -144,19 +143,23 @@ const ULTIMO_ANNO = ANNI.length-1;
 // semestri di ogni anno: il Semestre Filtro e' unico, il I anno ha solo il 2° semestre
 const semestriDi = n => n===0 ? [1] : n===1 ? [2] : [1,2];
 const valido = n => Number.isInteger(n) && n>=0 && n<=ULTIMO_ANNO;
-const ancora = n => n===0 ? 'semestre-filtro' : 'anno-'+n;
-// numero dell'anno scritto nell'indirizzo (#semestre-filtro, #anno-1 ... #anno-6), oppure null
-function annoDaIndirizzo(){
-  if(location.hash==='#semestre-filtro') return 0;
-  const m=/^#anno-([1-6])$/.exec(location.hash); return m ? +m[1] : null;
+// semestri da scegliere: negli anni con un solo semestre (Filtro e I anno) i corsi si vedono subito
+const daScegliere = n => semestriDi(n).length > 1;
+// ancora nell'indirizzo: #semestre-filtro, #anno-1 ... #anno-6, e con il semestre #anno-4-s2
+const ancora = (n, s) => n===0 ? 'semestre-filtro' : 'anno-'+n+(s && daScegliere(n) ? '-s'+s : '');
+// anno (e semestre) scritti nell'indirizzo, oppure null
+function daIndirizzo(){
+  if(location.hash==='#semestre-filtro') return {anno:0, sem:null};
+  const m=/^#anno-([1-6])(?:-s([12]))?$/.exec(location.hash);
+  if(!m) return null;
+  const n = +m[1], s = m[2] ? +m[2] : null;
+  return {anno:n, sem: s && semestriDi(n).includes(s) && daScegliere(n) ? s : null};
 }
-function annoIniziale(){
-  const daIndirizzo = annoDaIndirizzo(); if(daIndirizzo!==null) return daIndirizzo;
-  const s = leggi(CHIAVE_ANNO); if(s && /^[0-6]$/.test(s)) return +s;
-  const r = recente(); if(r) return r.c.anno;
-  const primo = CORSI.find(c=>c.href); return primo ? primo.anno : 1;
-}
-let anno = annoIniziale();
+// all'apertura nessun anno e' scelto: lo sceglie l'utente. Solo un indirizzo con l'anno
+// (per esempio "Tutti i corsi" da dentro un corso, o l'indice nel piede) lo apre gia' scelto.
+const inizio = daIndirizzo();
+let anno = inizio ? inizio.anno : null;
+let semestre = inizio ? inizio.sem : null;
 let geo = null, posizione = 0, animazione = 0;
 let sentieroAcceso = RIDOTTO || !('IntersectionObserver' in window);
 
@@ -213,7 +216,7 @@ function disegnaSentiero(){
   $$('.tappa', elSentiero).forEach((t,i)=>{ t.style.left = g.punti[i].x+'px'; t.style.top = g.punti[i].y+'px'; });
   // dopo un ridimensionamento il segnale resta fermo sull'anno scelto
   cancelAnimationFrame(animazione); animazione = 0;
-  posizione = sentieroAcceso ? g.lunghezze[anno] : 0;
+  posizione = (sentieroAcceso && anno!==null) ? g.lunghezze[anno] : 0;
   mostraTraccia(posizione, false);
 }
 function mostraTraccia(cur, inMoto){
@@ -264,11 +267,13 @@ function conduci(versoAnno){
   animazione = requestAnimationFrame(passo);
 }
 function aggiornaTappe(){
+  const fuoco = anno===null ? 0 : anno;   // senza anno scelto la tastiera entra dalla prima tappa
+  elSentiero.classList.toggle('nessuno', anno===null);
   $$('.tappa', elSentiero).forEach((t,i)=>{
     const sel = i===anno, b = $('.nodo', t);
     t.classList.toggle('scelta', sel);
     b.setAttribute('aria-selected', String(sel));
-    b.tabIndex = sel ? 0 : -1;
+    b.tabIndex = i===fuoco ? 0 : -1;
   });
 }
 
@@ -283,31 +288,72 @@ function semestreHtml(s){
   const testa = filtro ? '<h4><span class="sem-n">SF</span>le materie del filtro</h4>' : `<h4><span class="sem-n">${s}°</span>semestre</h4>`;
   return `<section class="semestre${lista.length?'':' vuota'}${filtro?' filtro':''}" data-n="${s}" aria-label="${filtro?'Semestre Filtro':s+'° semestre'}"><div class="sem-testa">${testa}${k?`<span class="pill">${k} ${plur(k,'corso','corsi')}</span>`:''}</div><div class="sem-lista">${corpo}</div></section>`;
 }
+function semScelta(s){
+  const lista = CORSI.filter(c=>c.anno===anno && c.semestre===s && c.href);
+  const k = lista.length, sel = s===semestre;
+  const orb = lista.slice(0,5).map(c=>`<span class="mini-orb" style="--c:${esc(c.colore||'#5B8CFF')}">${esc(c.sigla)}</span>`).join('');
+  return `<button type="button" class="sem-scelta${sel?' scelto':''}${k?'':' vuoto-sem'}" data-sem="${s}" aria-pressed="${sel}">
+    <span class="ss-n">${s}°</span><span class="ss-t">semestre</span>
+    <span class="ss-info">${k ? `${k} ${plur(k,'corso','corsi')}` : 'in arrivo'}</span>
+    ${orb ? `<span class="ss-orb" aria-hidden="true">${orb}</span>` : ''}
+  </button>`;
+}
 function disegnaPannello(anima){
+  // nessun anno scelto: solo l'invito a toccarne uno
+  if(anno===null){
+    elPannello.removeAttribute('aria-labelledby');
+    elPannello.innerHTML = `<div class="pannello-invito${anima?' entra-t':''}"><span class="invito-freccia" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>Tocca il tuo anno sul percorso qui sopra</p></div>`;
+    return;
+  }
   const k = pubblicati(anno).length;
   elPannello.setAttribute('aria-labelledby', 'tab-'+anno);
-  elPannello.innerHTML = `<div class="pannello-testa${anima?' entra-t':''}"><h3>${ANNI[anno].titolo}</h3><p>${k ? `${k} ${plur(k,'corso disponibile','corsi disponibili')}` : (anno===0 ? 'Le materie del semestre filtro arriveranno presto' : 'I corsi di quest\'anno arriveranno presto')}</p></div>
-    <div class="semestri${semestriDi(anno).length===1?' unico':''}${anima?' entra':''}">${semestriDi(anno).map(semestreHtml).join('')}</div>`;
+  const testa = sotto => `<div class="pannello-testa${anima?' entra-t':''}"><h3>${ANNI[anno].titolo}</h3><p>${sotto}</p></div>`;
+  // Semestre Filtro e I anno: un solo semestre, i corsi compaiono subito
+  if(!daScegliere(anno)){
+    elPannello.innerHTML = testa(k ? `${k} ${plur(k,'corso disponibile','corsi disponibili')}` : (anno===0 ? 'Le materie del semestre filtro arriveranno presto' : 'I corsi di quest\'anno arriveranno presto'))
+      + `<div class="semestri unico${anima?' entra':''}">${semestriDi(anno).map(semestreHtml).join('')}</div>`;
+    return;
+  }
+  // gli altri anni: prima il semestre, poi i corsi di quel semestre
+  elPannello.innerHTML = testa(semestre ? `${semestre}° semestre` : 'Scegli il semestre')
+    + `<div class="sem-scelte${semestre?' compatte':''}${anima?' entra':''}" role="group" aria-label="Semestre">${semestriDi(anno).map(semScelta).join('')}</div>`
+    + (semestre ? `<div class="semestri unico entra" id="corsi-semestre">${semestreHtml(semestre)}</div>` : '');
+}
+// porta i corsi sullo schermo se sono rimasti sotto (succede sul telefono)
+function mostraSeSotto(el){
+  if(!el) return;
+  const r = el.getBoundingClientRect();
+  if(r.top > window.innerHeight - 140){
+    const stretto = window.innerWidth < 820;
+    window.scrollTo({top: window.scrollY + r.top - (stretto ? 84 : window.innerHeight*0.4), behavior: RIDOTTO ? 'auto' : 'smooth'});
+  }
+}
+function scriviIndirizzo(){
+  const h = anno===null ? '' : '#'+ancora(anno, semestre);
+  if(location.hash!==h){ try{ history.replaceState(null,'', h || location.pathname+location.search); }catch(e){} }
 }
 function scegliAnno(n, opz){
   opz = opz || {};
   if(!valido(n)) return;
   const cambiato = n!==anno;
-  anno = n; scrivi(CHIAVE_ANNO, String(n));
-  if(location.hash!=='#'+ancora(n)){ try{ history.replaceState(null,'','#'+ancora(n)); }catch(e){} }
+  anno = n;
+  if(cambiato) semestre = (opz.sem && daScegliere(n)) ? opz.sem : null;
+  scriviIndirizzo();
   aggiornaTappe();
   if(sentieroAcceso) conduci(n);
   if(cambiato) disegnaPannello(true);
   if(opz.fuoco) $('#tab-'+n).focus();
-  // se i corsi dell'anno restano fuori dallo schermo (succede sul telefono), la pagina scorre fino a loro
-  if(cambiato && !opz.fuoco){
-    const r = elPannello.getBoundingClientRect();   // il riquadro intero: il titolo dentro si sta ancora animando
-    if(r.top > window.innerHeight - 140){
-      const stretto = window.innerWidth < 820;
-      window.scrollTo({top: window.scrollY + r.top - (stretto ? 84 : window.innerHeight*0.45), behavior: RIDOTTO ? 'auto' : 'smooth'});
-    }
-  }
+  if(cambiato && !opz.fuoco) mostraSeSotto(elPannello);
 }
+function scegliSemestre(s){
+  if(anno===null || !semestriDi(anno).includes(s)) return;
+  semestre = s;
+  scriviIndirizzo();
+  disegnaPannello(false);
+  const b = $(`.sem-scelta[data-sem="${s}"]`, elPannello); if(b) b.focus({preventScroll:true});
+  mostraSeSotto($('#corsi-semestre'));
+}
+elPannello.addEventListener('click', e=>{ const b = e.target.closest('[data-sem]'); if(b) scegliSemestre(+b.dataset.sem); });
 
 /* ---------- riprendi, numeri e novita' ---------- */
 function disegnaRiprendi(){
@@ -488,13 +534,17 @@ elSentiero.addEventListener('click', e=>{ const b=e.target.closest('[data-anno]'
 elSentiero.addEventListener('keydown', e=>{
   const tot = ANNI.length;
   let n = null;
-  if(e.key==='ArrowRight') n = (anno+1)%tot;
-  else if(e.key==='ArrowLeft') n = (anno+tot-1)%tot;
+  if(e.key==='ArrowRight') n = anno===null ? 0 : (anno+1)%tot;
+  else if(e.key==='ArrowLeft') n = anno===null ? ULTIMO_ANNO : (anno+tot-1)%tot;
   else if(e.key==='Home') n = 0;
   else if(e.key==='End') n = ULTIMO_ANNO;
   if(n!==null){ e.preventDefault(); scegliAnno(n,{fuoco:true}); }
 });
-window.addEventListener('hashchange', ()=>{ const n=annoDaIndirizzo(); if(n!==null && n!==anno) scegliAnno(n); });
+window.addEventListener('hashchange', ()=>{
+  const d = daIndirizzo(); if(!d) return;
+  if(d.anno!==anno) scegliAnno(d.anno, {sem:d.sem});
+  else if(d.sem && d.sem!==semestre) scegliSemestre(d.sem);
+});
 
 /* ---------- fluorescenza: cellule che galleggiano nell'apertura ----------
    Corpi cellulari verdi (FITC) e magenta (TRITC), nuclei blu (DAPI): come in un'immunofluorescenza.
@@ -633,7 +683,7 @@ const osserva = ('IntersectionObserver' in window) ? new IntersectionObserver(vo
   voci.forEach(v=>{
     if(!v.isIntersecting) return;
     v.target.classList.add('visto');
-    if(v.target===elSentiero && !sentieroAcceso){ sentieroAcceso = true; setTimeout(()=>conduci(anno), 350); }
+    if(v.target===elSentiero && !sentieroAcceso){ sentieroAcceso = true; if(anno!==null) setTimeout(()=>conduci(anno), 350); }
     if(v.target.id==='numeri') setTimeout(contaSu, 200);
     osserva.unobserve(v.target);
   });
@@ -772,7 +822,7 @@ if(location.hash==='#cerca'){
   window.scrollTo(0,0);
   setTimeout(()=>{ elCerca.focus({preventScroll:true}); }, 400);
 }
-if(annoDaIndirizzo()!==null && !ricarica){
+if(daIndirizzo()!==null && !ricarica){
   let fermo = -1;
   const vai = ()=>{ const el=$('#percorso'); if(el){ el.scrollIntoView({block:'start', behavior:'instant'}); fermo = window.scrollY; } };
   vai();
