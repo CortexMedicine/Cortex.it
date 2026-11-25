@@ -2,6 +2,17 @@
 </style><meta name="description" content="Oftalmologia, otorinolaringoiatria e audiologia.">
 <link rel="icon" href="../../assets/cortex-32.png" type="image/png">
 <link rel="apple-touch-icon" href="../../assets/cortex-180.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:title" content="Malattie degli organi di senso · Cortex">
+<meta property="og:description" content="Oftalmologia, otorinolaringoiatria e audiologia.">
+<link rel="canonical" href="https://www.cortexmed.it/corsi/organi-di-senso/">
+<meta property="og:url" content="https://www.cortexmed.it/corsi/organi-di-senso/">
+<meta property="og:site_name" content="Cortex">
+<meta property="og:image" content="https://www.cortexmed.it/assets/cortex-anteprima.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <style id="rm-barra">
 .rm-nav{position:relative;background:var(--surface-2,var(--frost,#E7EEEE));font-family:var(--font-body,var(--f-body,"Manrope","Segoe UI",system-ui,sans-serif));font-size:.88rem;line-height:1.2}
 .rm-nav::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,#14B8A6,#3B82F6 55%,#8B5CF6)}
@@ -486,6 +497,9 @@ html{scrollbar-color:#2A3350 #05070D}
 .xcard.inclina{transition:transform .14s ease-out,box-shadow .3s,border-color .25s}
 
 /* piede: grande scritta in fondo, come nel sito generale */
+.piede-corso-link{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 22px;margin:44px 16px 0;font-size:.84rem}
+.piede-corso-link a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--bordo-2);transition:color .2s,border-color .2s}
+.piede-corso-link a:hover{color:var(--ink);border-color:currentColor}
 .piede-corso{padding:8px 0 0;overflow:hidden;pointer-events:none}
 .piede-corso p{height:.76em;overflow:hidden;text-align:center;white-space:nowrap;font-family:var(--f-display);font-weight:800;font-size:clamp(3.2rem,16.5vw,17rem);line-height:.92;letter-spacing:-.05em;background:var(--fluo);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.3;-webkit-mask:linear-gradient(180deg,#000 10%,rgba(0,0,0,.25) 100%);mask:linear-gradient(180deg,#000 10%,rgba(0,0,0,.25) 100%);user-select:none}
 @media (max-width:760px){.piede-corso{padding-bottom:70px}}   /* sopra la barra per scegliere l'esercizio, sul telefono */
@@ -3523,7 +3537,16 @@ if(window.claude&&typeof window.claude.use==='function'){window.claude.use('samp
 
   // piede con la grande scritta
   var main = doc.getElementById('main');
-  if(main) main.parentNode.insertBefore(crea('footer', 'piede-corso', '<p>Cortex</p>'), main.nextSibling);
+  if(main){
+    var piede = crea('footer', 'piede-corso', '<p>Cortex</p>');
+    main.parentNode.insertBefore(piede, main.nextSibling);
+    // link alle pagine Privacy e Contatti del sito (servono in ogni pagina)
+    var info = doc.createElement('nav');
+    info.className = 'piede-corso-link';
+    info.setAttribute('aria-label', 'Informazioni sul sito');
+    info.innerHTML = '<a href="../../privacy.html">Privacy e cookie</a><a href="../../contatti.html">Contatti</a>';
+    piede.parentNode.insertBefore(info, piede);
+  }
 
   // titolo: ultima parola in corsivo, poi le parole entrano una dopo l'altra
   var h = doc.getElementById('studio-h');

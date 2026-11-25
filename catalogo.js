@@ -1,7 +1,7 @@
 /* File generato da costruisci.py: non modificarlo a mano, modifica catalogo.json. */
 window.CATALOGO = {
  "nome": "Cortex",
- "aggiornato": "2026-11-25",
+ "aggiornato": "2026-11-26",
  "corsi": [
   {
    "ordine": 5,

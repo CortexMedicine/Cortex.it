@@ -646,3 +646,27 @@ a.nav-cerca{text-decoration:none}
   .car-et{padding:8px 12px;font-size:.85rem}
 }
 @media (max-width:820px){.bento.car-binario{align-items:flex-start}}
+
+/* ---------- pagine Privacy e Contatti ---------- */
+.legale-testa{padding-bottom:10px;background:radial-gradient(900px 420px at 80% 0%,rgba(91,140,255,.12),transparent 62%),radial-gradient(700px 400px at 6% 0%,rgba(61,245,166,.08),transparent 60%)}
+.legale{position:relative;padding:20px 0 170px}
+.legale-in{max-width:760px}
+.legale .nota-agg{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.legale h2{font-size:clamp(1.2rem,2.2vw,1.45rem);letter-spacing:-.02em;margin:44px 0 12px}
+.legale p,.legale li{color:var(--ink-2);line-height:1.75}
+.legale p+p{margin-top:12px}
+.legale ul{margin:12px 0 0;padding-left:1.2em}
+.legale li+li{margin-top:8px}
+.legale li::marker{color:var(--fitc)}
+.legale strong{color:var(--ink);font-weight:600}
+.legale a,.contatto-mail a{color:var(--fitc);text-underline-offset:3px}
+.email-attesa{color:var(--muted);font-style:italic}
+.contatto-box{margin-top:34px;padding:22px 30px;border-radius:22px;border:1px solid var(--bordo-2);background:var(--vetro);box-shadow:var(--ombra-m);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);max-width:100%}
+.contatto-et{display:block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.contatto-mail{margin:8px 0 0;font-family:var(--f-display);font-weight:700;font-size:clamp(1.15rem,3.2vw,1.6rem);overflow-wrap:anywhere}
+.contatto-mail a{text-decoration:none;background:var(--fluo);-webkit-background-clip:text;background-clip:text;color:transparent}
+.contatto-mail .email-attesa{font-family:var(--f-testo);font-weight:500;font-size:1rem}
+.piede-legale{display:flex;flex-wrap:wrap;gap:6px 18px}
+.piede-legale a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--bordo-2);transition:color .2s,border-color .2s}
+.piede-legale a:hover,.piede-legale a[aria-current]{color:var(--ink);border-color:var(--fitc)}
+@media (max-width:760px){.legale{padding-bottom:190px}}
