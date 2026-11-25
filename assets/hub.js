@@ -99,8 +99,12 @@ function anello(p, dim){
 }
 
 /* ---------- schede dei corsi ---------- */
-const dove = c => c.anno===0 ? 'Semestre Filtro' : `${ROMANI[c.anno-1]} anno · ${c.semestre}° semestre`;
-const pubblicati = (anno, sem)=> CORSI.filter(c=> c.href && c.anno===anno && (!sem || c.semestre===sem));
+// un corso puo' stare in piu' anni/semestri (per esempio Anatomia nel I e nel II anno): "altri" in catalogo.js
+const posti = c => [[c.anno, c.semestre]].concat(c.altri || []);
+const sta = (c, anno, sem)=> posti(c).some(([a,s])=> a===anno && (!sem || s===sem));
+const dovePosto = ([a,s])=> a===0 ? 'Semestre Filtro' : `${ROMANI[a-1]} anno · ${s}° semestre`;
+const dove = c => posti(c).map(dovePosto).join(' e ');
+const pubblicati = (anno, sem)=> CORSI.filter(c=> c.href && sta(c, anno, sem));
 const N_PUBBLICATI = CORSI.filter(c=>c.href).length;
 const ULTIMO = CORSI.filter(c=>c.href).sort((a,b)=>(b.ordine||0)-(a.ordine||0))[0] || null;   // l'ultimo corso aggiunto
 function chips(c){
@@ -279,7 +283,7 @@ function aggiornaTappe(){
 
 /* ---------- semestri dell'anno scelto ---------- */
 function semestreHtml(s){
-  const lista = CORSI.filter(c=>c.anno===anno && c.semestre===s);
+  const lista = CORSI.filter(c=>sta(c, anno, s));
   const k = lista.filter(c=>c.href).length;
   const corpo = lista.length ? lista.map(c=>scheda(c)).join('')
     : `<div class="vuoto"><span class="vuoto-blob" aria-hidden="true">${SCINTILLA}</span><p class="vuoto-t">Ancora nessun corso</p><p class="vuoto-s">I corsi di questo semestre arriveranno presto.</p></div>`;
@@ -289,7 +293,7 @@ function semestreHtml(s){
   return `<section class="semestre${lista.length?'':' vuota'}${filtro?' filtro':''}" data-n="${s}" aria-label="${filtro?'Semestre Filtro':s+'° semestre'}"><div class="sem-testa">${testa}${k?`<span class="pill">${k} ${plur(k,'corso','corsi')}</span>`:''}</div><div class="sem-lista">${corpo}</div></section>`;
 }
 function semScelta(s){
-  const lista = CORSI.filter(c=>c.anno===anno && c.semestre===s && c.href);
+  const lista = CORSI.filter(c=>c.href && sta(c, anno, s));
   const k = lista.length, sel = s===semestre;
   const orb = lista.slice(0,5).map(c=>`<span class="mini-orb" style="--c:${esc(c.colore||'#5B8CFF')}">${esc(c.sigla)}</span>`).join('');
   return `<button type="button" class="sem-scelta${sel?' scelto':''}${k?'':' vuoto-sem'}" data-sem="${s}" aria-pressed="${sel}">

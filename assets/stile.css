@@ -558,8 +558,12 @@ a.nav-cerca{text-decoration:none}
 @media (max-width:820px){.passi{grid-template-columns:minmax(0,1fr);margin-top:40px}.guida-testa{padding-top:120px}}
 
 /* chiusura della guida */
-.guida-fine{padding:90px 0 40px}
-.guida-azioni{display:flex;justify-content:center}
+.guida-fine{padding:90px 0 150px}
+/* le onde decorative tra le sezioni non devono mai prendersi i clic dei pulsanti vicini */
+.onda,.onda-su,.piede-onda{pointer-events:none}
+.guida-azioni{position:relative;z-index:5;display:flex;justify-content:center}
+.guida-fine{position:relative;z-index:2}
+@media (max-width:560px){.guida-fine{padding-bottom:170px}}
 
 /* ========== anno → semestre → corsi ========== */
 /* nessun anno scelto: le tappe respirano piano per invitare al tocco */
@@ -609,3 +613,36 @@ a.nav-cerca{text-decoration:none}
   .sem-scelte.compatte .ss-n{font-size:2rem}
 }
 @media (prefers-reduced-motion:reduce){.sentiero.nessuno .nodo,.invito-freccia{animation:none!important}}
+
+/* ========== Come funziona: i tipi di esercizio in un carosello ========== */
+.carosello{position:relative}
+.car-comandi{display:flex;align-items:center;gap:10px;margin:0 auto 18px;max-width:100%}
+.car-etichette{display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;padding:4px;border-radius:999px;background:var(--vetro);border:1px solid var(--bordo)}
+.car-etichette::-webkit-scrollbar{display:none}
+.car-et{flex:none;padding:9px 16px;border:0;border-radius:999px;background:transparent;color:var(--ink-2);font-weight:600;font-size:.92rem;cursor:pointer;white-space:nowrap;transition:background .25s,color .25s}
+.car-et:hover{color:var(--ink);background:var(--vetro-2)}
+.car-et[aria-selected="true"]{background:var(--fluo);color:var(--btn-ink);box-shadow:0 8px 22px -10px rgba(91,140,255,.8)}
+.car-freccia{flex:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--bordo-2);background:var(--vetro);color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:background .25s,border-color .25s,transform .4s var(--molla),opacity .25s}
+.car-freccia:hover:not(:disabled){background:var(--vetro-2);border-color:var(--ink-2);transform:scale(1.06)}
+.car-freccia:disabled{opacity:.3;cursor:default}
+.car-conta{flex:none;min-width:4.2em;text-align:right;color:var(--muted);font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+.bento.car-binario{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 2px 10px;border-radius:30px;overscroll-behavior-x:contain}
+.bento.car-binario::-webkit-scrollbar{display:none}
+.bento.car-binario:focus-visible{outline:2px solid var(--fitc);outline-offset:4px}
+.car-binario .tile{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;flex-direction:row;align-items:center;gap:44px;padding:44px;min-height:400px}
+.car-binario .tile:hover{transform:none}
+.car-binario .tile-testo{flex:1 1 0;min-width:0;max-width:460px}
+.car-binario .tile h3{font-size:clamp(1.4rem,2.4vw,1.9rem)}
+.car-binario .tile p{font-size:1.02rem;line-height:1.65}
+.car-binario .mini{flex:1 1 0;min-width:0;margin-top:0}
+@media (max-width:820px){
+  .car-binario .tile{flex-direction:column;align-items:stretch;gap:24px;padding:24px;min-height:0}
+  .car-binario .tile-testo{max-width:none}
+}
+@media (max-width:560px){
+  .car-comandi{gap:6px}
+  .car-freccia{width:40px;height:40px}
+  .car-conta{display:none}
+  .car-et{padding:8px 12px;font-size:.85rem}
+}
+@media (max-width:820px){.bento.car-binario{align-items:flex-start}}

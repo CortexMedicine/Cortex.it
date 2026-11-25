@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@1&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/stile.css?v=f38756f9">
+<link rel="stylesheet" href="assets/stile.css?v=deedc4f6">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="pagina-guida">
@@ -68,8 +68,10 @@
         <p class="sez-sotto">Ogni corso ha gli stessi strumenti: li impari una volta e valgono per tutte le materie.</p>
       </div>
 
-      <div class="bento">
-        <article class="tile t-flash rivela">
+      <div class="carosello rivela">
+        <div class="car-comandi" id="car-comandi"></div>
+        <div class="bento car-binario" id="car-binario" tabindex="0" role="region" aria-roledescription="carosello" aria-label="Tipi di esercizi">
+        <article class="tile t-flash">
           <div class="tile-testo">
             <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="6" width="13" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 3h10a3 3 0 0 1 3 3v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
             <h3>Flashcard che si ricordano di te</h3>
@@ -86,7 +88,7 @@
           </div>
         </article>
 
-        <article class="tile t-quiz rivela" style="--r:1">
+        <article class="tile t-quiz">
           <div class="tile-testo">
             <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12.5l2.6 2.6L16 9.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <h3>Quiz, vero/falso e domande aperte</h3>
@@ -98,7 +100,7 @@
           </div>
         </article>
 
-        <article class="tile t-esame rivela" style="--r:2">
+        <article class="tile t-esame">
           <div class="tile-testo">
             <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
             <h3>Simula l'esame</h3>
@@ -113,7 +115,7 @@
           </div>
         </article>
 
-        <article class="tile t-casi rivela">
+        <article class="tile t-casi">
           <div class="tile-testo">
             <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 3v6a4 4 0 0 0 8 0V3M9 13v2.5a5 5 0 0 0 10 0V13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="11" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
             <h3>Casi clinici passo per passo</h3>
@@ -126,7 +128,7 @@
           </div>
         </article>
 
-        <article class="tile t-confronti rivela" style="--r:1">
+        <article class="tile t-confronti">
           <div class="tile-testo">
             <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="4" width="7.5" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="4" width="7.5" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5.5 8.5h2.5M16 8.5h2.5M5.5 12h2.5M16 12h2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
             <h3>Confronti tra quadri simili</h3>
@@ -138,7 +140,7 @@
           </div>
         </article>
 
-        <article class="tile t-prog rivela" style="--r:2">
+        <article class="tile t-prog">
           <div class="tile-testo">
             <span class="tile-icona" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
             <h3>Sai sempre a che punto sei</h3>
@@ -150,6 +152,7 @@
             <div class="mpr"><span>Pancreatite acuta</span><i style="--v:41%"></i><b>41%</b></div>
           </div>
         </article>
+      </div>
       </div>
     </div>
   </section>
@@ -190,7 +193,7 @@
   <p class="piede-scritta" aria-hidden="true">Cortex</p>
 </footer>
 
-<script src="catalogo.js?v=a6d89f1a"></script>
-<script src="assets/pagina.js?v=2c4bdbf7"></script>
+<script src="catalogo.js?v=812c3d80"></script>
+<script src="assets/pagina.js?v=6d634470"></script>
 </body>
 </html>
