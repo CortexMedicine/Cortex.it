@@ -1,4 +1,5 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><meta name="description" content="Ghiandole endocrine, chirurgia endocrina e malattie del metabolismo.">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}[data-claude]{display:none!important}
+</style><meta name="description" content="Ghiandole endocrine, chirurgia endocrina e malattie del metabolismo.">
 <link rel="icon" href="../../assets/cortex-32.png" type="image/png">
 <link rel="apple-touch-icon" href="../../assets/cortex-180.png">
 <style id="rm-barra">
@@ -112,6 +113,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 .rm-prova{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;border:1px solid var(--prim-bordo);background:var(--prim-soft);color:var(--ink);font-family:var(--f-mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
 .rm-prova::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--fluo);box-shadow:0 0 8px rgba(91,140,255,.9)}
 @media (max-width:640px){.rm-dove .rm-lungo{display:none}}
+
+/* nei corsi con lo stile nel <head> la barra del sito generale verrebbe dopo e resterebbe chiara:
+   questi selettori piu' forti la tengono sempre scura */
+html body .rm-nav{background:var(--bg-2);border-bottom:1px solid var(--bordo);font-family:var(--f-body)}
+html body .rm-back{color:var(--ink)}
+html body .rm-back:hover{background:var(--vetro-2);color:var(--ink)}
+html body .rm-dove{color:var(--muted);font-family:var(--f-mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500}
 
 /* ---------- testata ---------- */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--bordo)}
@@ -402,6 +410,34 @@ tr:last-child td{border-bottom:0}
 
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 
+/* ---------- figure e atlante (corsi con immagini: anatomia, anatomia patologica...) ---------- */
+/* le figure dei libri hanno il fondo bianco: restano chiare, dentro una cornice di vetro */
+.qfig{margin:0;display:grid;gap:8px;justify-items:center;align-content:start}
+.qfig img{max-height:min(56vh,560px);width:auto;max-width:100%;border:1px solid var(--bordo-2);border-radius:14px;background:#fff;cursor:zoom-in;box-shadow:0 18px 50px -24px rgba(0,0,0,.9)}
+.qfig figcaption{color:var(--muted);font-size:.62rem}
+.fig-split{display:grid;gap:18px;min-width:0}
+.fig-side{display:grid;gap:16px;min-width:0;align-content:start}
+@media (min-width:900px){.fig-split{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:start}.fig-split .qfig{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px)}.fig-split .qfig img{max-height:min(74vh,760px)}}
+.lightbox{position:fixed;inset:0;z-index:90;background:rgba(3,5,10,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);overflow:auto;padding:16px;display:grid;place-items:center}
+.lightbox.fit img{max-width:calc(100vw - 32px);max-height:calc(100vh - 32px);width:auto;height:auto;cursor:zoom-in}
+.lightbox.full{place-items:start}
+.lightbox.full img{max-width:none;width:auto;height:auto;cursor:zoom-out}
+.lightbox img{background:#fff;border-radius:12px;box-shadow:0 40px 100px -30px #000}
+.lb-close{position:fixed;top:14px;right:14px;z-index:91}
+.lb-hint{position:fixed;left:14px;bottom:12px;color:var(--ink-2);z-index:91}
+.rev-img{max-height:240px;width:auto;max-width:100%;border-radius:10px;border:1px solid var(--bordo-2);background:#fff;display:block;margin-bottom:8px}
+.atlas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.fig-card{position:relative;display:grid;gap:10px;align-content:start;padding:14px;border:1px solid var(--bordo);border-radius:20px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.01) 60%),var(--card);box-shadow:var(--ombra);transition:border-color .25s,transform .4s var(--molla)}
+.fig-card:hover{border-color:var(--bordo-2);transform:translateY(-2px)}
+.fig-card img{width:100%;height:auto;border-radius:12px;background:#fff;cursor:zoom-in;border:1px solid var(--bordo)}
+.fig-card .xt{font-family:var(--f-display);font-weight:700;font-size:1.05rem;letter-spacing:-.01em;line-height:1.25}
+.fig-card .legend-list{margin:0;padding:0;list-style:none;font-size:.9rem;color:var(--ink-2);columns:2;column-gap:14px}
+.fig-card .legend-list li{break-inside:avoid;padding:1px 0}
+.fig-card .legend-list b{display:inline-block;min-width:1.6em;color:var(--ok);font-family:var(--f-mono);font-weight:500}
+.fig-card .fig-desc{margin:0;font-size:.92rem;color:var(--ink-2);line-height:1.5}
+.fig-card .foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;color:var(--muted)}
+@media (max-width:560px){.atlas-grid{grid-template-columns:minmax(0,1fr)}.fig-card .legend-list{columns:1}}
+
 /* ========== allineamento al sito generale ========== */
 /* lo sfondo sta su <html>: cosi' le luci di fondo restano dietro a tutto */
 body{background:transparent}
@@ -468,6 +504,16 @@ html.ricaricata main{animation:rientra .45s var(--morbido) both}
   .intro h1.pronto .p{opacity:1;transform:none;filter:none}
   .xcard:hover{transform:none}
 }
+
+/* ---------- simulazione d'esame: numero di domande libero, avanti e indietro ben visibili ---------- */
+.ex-numero{width:7.5em;border:1px solid var(--bordo-2);border-radius:10px;background:var(--card);color:var(--ink);padding:.45em .7em;font-size:.95rem;font-variant-numeric:tabular-nums}
+.ex-numero:focus{outline:none;border-color:var(--prim-bordo);box-shadow:0 0 0 4px var(--prim-soft)}
+.ex-nota{font-size:.82rem}
+.ex-rapidi{display:flex;flex-wrap:wrap;gap:4px;flex-basis:100%;margin-left:100px}
+.actions.nav-esame{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:6px}
+.actions.nav-esame .btn{min-height:48px;font-size:1rem}
+.actions.nav-esame .hint{grid-column:1 / -1}
+@media (max-width:560px){.ex-rapidi{margin-left:0}.actions.nav-esame .btn{font-size:.9rem;padding-inline:.6em}}
 </style>
 
 <script>(function(){try{var t=localStorage.getItem("ripasso-tema");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -1995,7 +2041,7 @@ function renderFlash(){const s=SESS,e=s.list[s.i],it=e.it,n=s.list.length;const 
 function nextLabel(b){const nb=Math.min(5,Math.max(b,1)+1);const d=BOX_DAYS[nb];return d===1?'domani':'tra '+d+' giorni';}
 function rateFlash(v){const s=SESS;if(!s||s.type!=='flash')return;const e=s.list[s.i];if(!e.shown)return;const it=e.it;const r=PROG[it.id]||{};let b=r.b||0,d;const td=today();
  if(v===0){b=1;d=td;}else if(v===1){b=Math.max(1,b);d=td+1;}else{b=Math.min(5,Math.max(b,1)+1);d=td+BOX_DAYS[b];}
- recSet(it.id,{b,d});e.rate=v;if(v===0&&!e.again)s.list.push({it,shown:false,rate:null,again:true});
+ recSet(it.id,{b,d});e.rate=v;
  if(s.i+1<s.list.length){s.i++;renderFlash();}else renderFlashEnd();}
 function renderFlashEnd(){const s=SESS;const rated=s.list.filter(e=>e.rate!=null);const c=[0,0,0];rated.forEach(e=>c[e.rate]++);
  const hard=[...new Set(rated.filter(e=>e.rate===0).map(e=>e.it))];const box=$('#sess');
@@ -2083,7 +2129,7 @@ function renderAI(box,e){const a=e.ai;const pass=a.voto!=null&&a.voto>=18;
   a.errori.length?h('div',{},h('p',{class:'mono eyebrow',text:'Da correggere'}),h('ul',{},a.errori.map(x=>h('li',{text:x})))):null,
   a.consiglio?h('p',{class:'tip',text:a.consiglio}):null,
   h('p',{class:'mono eyebrow',text:'Valutazione indicativa basata sui punti chiave degli appunti'}));}
-function claudeOK(){return !!(SAMPLE&&typeof SAMPLE.json==='function'&&!SAMPLE_OFF);}
+function claudeOK(){return false&&!!(SAMPLE&&typeof SAMPLE.json==='function'&&!SAMPLE_OFF);}
 function updateClaudeUI(){document.querySelectorAll('[data-claude]').forEach(el=>{el.hidden=!claudeOK();});}
 
 /* ---------- casi clinici ---------- */
@@ -2283,12 +2329,33 @@ showView(VIEWS.includes(startView)?startView:'studio');
 if(!D.parts.length){$('#tree').append(h('p',{class:'empty-note',text:'I contenuti non sono stati caricati. Ricarica la pagina.'}));}
 initCloud();
 if(window.claude&&typeof window.claude.use==='function'){window.claude.use('sample').then(sm=>{SAMPLE=sm||null;updateClaudeUI();}).catch(()=>{SAMPLE=null;});}
-/* Cortex: ponte dentro il codice del corso (costruisci.py lo inserisce in fondo al suo blocco).
-   Se si avvia una nuova sessione mentre ne e' aperta un'altra (per esempio «Rifai la sessione» o
-   «Ripeti gli errori» dalla schermata dei risultati), la pagina si ricarica e la sessione riparte
-   subito dopo, con le stesse domande. Ogni sessione conta cosi' come una nuova pagina vista.
-   Parte solo dal clic dell'utente sul pulsante. */
+/* Cortex: ponte dentro il codice del corso (costruisci.py lo inserisce in fondo al suo blocco,
+   cosi' puo' usare SESS, OPTS, BYID e le funzioni del corso).
+   1) Se si avvia una nuova sessione mentre ne e' aperta un'altra (per esempio «Rifai la sessione» o
+      «Ripeti gli errori» dalla schermata dei risultati), la pagina si ricarica e la sessione riparte
+      subito dopo, con le stesse domande. Ogni sessione conta cosi' come una nuova pagina vista.
+      Parte solo dal clic dell'utente sul pulsante.
+   2) In una stessa sessione nessuna domanda compare due volte (anche se lo stesso testo e' in
+      paragrafi diversi). Il ripescaggio delle flashcard sbagliate lo toglie costruisci.py.
+   3) Simulazione d'esame: numero di domande scelto liberamente e pulsanti avanti/indietro piu' evidenti. */
 ;(function(){
+  /* ---------- nessuna domanda ripetuta ---------- */
+  const chiaveTesto = it => String((it && (it.q || it.t)) || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  function unici(items){
+    if(!Array.isArray(items)) return items;
+    const visti = new Set();
+    return items.filter(it => {
+      const k = chiaveTesto(it) || (it && it.id);
+      if(!k || visti.has(k)) return false;
+      visti.add(k); return true;
+    });
+  }
+  if(typeof sampleExam === 'function'){
+    const sampleOrig = sampleExam;
+    sampleExam = (pool, n) => sampleOrig(unici(pool), n);
+  }
+
+  /* ---------- ricaricamento tra una sessione e l'altra ---------- */
   const K = 'cortex-riparti';
   const perId = a => a.map(it => it.id), daId = a => a.map(id => BYID.get(id)).filter(Boolean);
   const elenco = [a => [perId(a[0]), a[1]], a => [daId(a[0]), a[1]]];
@@ -2297,7 +2364,13 @@ if(window.claude&&typeof window.claude.use==='function'){window.claude.use('samp
     startCase: [a => [a[0].id], a => [CASEBY.get(a[0])]],
     startCmp: [a => [a[0].id], a => [CMPBY.get(a[0])]]
   };
-  const orig = {startQuiz, startFlash, startOpen, startCase, startCmp};
+  const CON_ELENCO = {startQuiz: 1, startFlash: 1, startOpen: 1};
+  const base = {startQuiz, startFlash, startOpen, startCase, startCmp};
+  // le sessioni con un elenco di domande partono sempre senza doppioni
+  const orig = {};
+  Object.keys(base).forEach(nome => {
+    orig[nome] = CON_ELENCO[nome] ? (items, ...resto) => base[nome](unici(items), ...resto) : base[nome];
+  });
   const valido = a => a && a[0] && (!Array.isArray(a[0]) || a[0].length > 0);
   function avvia(nome, a){
     const vSess = document.getElementById('v-sessione');
@@ -2324,6 +2397,68 @@ if(window.claude&&typeof window.claude.use==='function'){window.claude.use('samp
       try{ a = MODI[r.f][1](r.a); }catch(e){}
       if(valido(a)) orig[r.f](...a);
     }, 0);
+  }
+
+  /* ---------- simulazione d'esame: numero di domande libero ---------- */
+  if(typeof renderExamSetup === 'function' && typeof examPool === 'function'){
+    const setupOrig = renderExamSetup;
+    renderExamSetup = function(){
+      setupOrig.apply(this, arguments);
+      const sel = document.getElementById('ex-n');
+      if(!sel || sel.tagName !== 'SELECT') return;
+      const pool = unici(examPool(OPTS.examScope === 'sel' ? 'sel' : 'tutto')).length;
+      if(!pool) return;
+      const val = Math.max(1, Math.min(pool, +OPTS.examN || 30));
+      const campo = h('input', {type: 'number', id: 'ex-n', class: 'ex-numero', min: 1, max: pool, step: 1, inputmode: 'numeric',
+        value: val, 'aria-label': 'Numero di domande (da 1 a ' + pool + ')'});
+      const nota = h('span', {class: 'muted ex-nota', text: 'da 1 a ' + pool});
+      const rapidi = h('span', {class: 'ex-rapidi'}, [10, 30, 60].filter(k => k < pool).concat([pool]).map(k =>
+        h('button', {type: 'button', class: 'btn sm ghost', text: k === pool ? 'Tutte (' + k + ')' : String(k),
+          onclick: () => { campo.value = k; imposta(); }})));
+      function imposta(){
+        let v = parseInt(campo.value, 10);
+        if(!Number.isFinite(v)) return;
+        v = Math.max(1, Math.min(pool, v));
+        OPTS.examN = v;
+        if(typeof saveLocalSoon === 'function') saveLocalSoon();
+      }
+      campo.addEventListener('input', imposta);
+      campo.addEventListener('change', () => { imposta(); campo.value = Math.max(1, Math.min(pool, +OPTS.examN || val)); });
+      OPTS.examN = val;
+      sel.replaceWith(campo);
+      campo.after(nota, rapidi);
+    };
+    // se la pagina si e' aperta direttamente sulla Simulazione, la schermata e' gia' stata disegnata: la rifaccio
+    const vEsame = document.getElementById('v-esame');
+    if(vEsame && !vEsame.hidden && !SESS) renderExamSetup();
+  }
+
+  /* ---------- simulazione d'esame: avanti e indietro ben visibili ---------- */
+  if(typeof renderExam === 'function'){
+    const examOrig = renderExam;
+    renderExam = function(){
+      examOrig.apply(this, arguments);
+      const s = SESS;
+      const pulsanti = [...document.querySelectorAll('#sess .qcard .actions button')];
+      const prec = pulsanti.find(b => /Precedente/.test(b.textContent));
+      let succ = pulsanti.find(b => /Successiva/.test(b.textContent));
+      if(!prec || !succ) return;
+      prec.closest('.actions').classList.add('nav-esame');
+      prec.textContent = '‹ Domanda precedente';
+      // all'ultima domanda "Successiva" diventa "Consegna" (una copia del pulsante, senza il suo vecchio comando)
+      if(s && s.i + 1 >= s.list.length){
+        const nuovo = succ.cloneNode(false);
+        succ.replaceWith(nuovo); succ = nuovo;
+        succ.disabled = false;
+        succ.textContent = 'Consegna la prova';
+        succ.addEventListener('click', () => { const b = document.getElementById('ex-submit'); if(b) b.click(); });
+      } else {
+        succ.textContent = 'Domanda successiva ›';
+      }
+      // dopo aver risposto, il passo successivo si illumina
+      const e = s && s.list[s.i];
+      if(e && e.ans != null) succ.classList.add('primary');
+    };
   }
 })();
 })();
