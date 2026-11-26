@@ -776,3 +776,77 @@ a.nav-cerca{text-decoration:none}
 .legale .dona-nota{margin-top:34px;font-size:.86rem;color:var(--muted)}
 .legale ul+p{margin-top:16px}
 .legale a.aiuto{color:var(--ink)}
+
+/* ---------- pulsanti dentro le pagine di testo: restano del loro colore ---------- */
+.legale a.btn-grad{color:var(--btn-ink)}
+.legale a.btn-vetro{color:var(--ink)}
+
+/* ---------- Semestre Filtro (semestre-filtro.html) ---------- */
+.sf-corsi{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:18px}
+.sf-corso{display:flex;flex-direction:column;gap:12px;padding:22px;border-radius:22px;border:1px solid var(--bordo-2);background:radial-gradient(320px 160px at 0% 0%,color-mix(in srgb,var(--c) 16%,transparent),transparent 70%),var(--vetro)}
+.sf-corso h3{font-size:1.15rem;letter-spacing:-.01em;line-height:1.25}
+.sf-corso h3 small{display:block;margin-top:4px;font-family:var(--f-testo);font-weight:500;font-size:.8rem;color:var(--muted)}
+.sf-corso p{font-size:.93rem;line-height:1.6;margin:0}
+.sf-num{list-style:none;margin:0!important;padding:0!important;display:flex;flex-wrap:wrap;gap:6px}
+.sf-num li{margin:0!important;padding:4px 10px;border-radius:999px;border:1px solid var(--bordo);font-size:.8rem;color:var(--ink-2)}
+.sf-num b{color:var(--ink);font-weight:700}
+.sf-azioni{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:4px}
+.btn-vetro.piccolo{padding:10px 18px;font-size:.92rem}
+.sf-fatti{list-style:none;padding:0!important;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.sf-fatti li{margin:0!important;padding:18px 20px;border-radius:18px;border:1px solid var(--bordo);background:var(--vetro);font-size:.94rem;line-height:1.6}
+.sf-fatti b{display:block;margin-bottom:4px;color:var(--ink);font-family:var(--f-display);font-size:1.02rem}
+.sf-avviso{margin-top:14px!important;font-size:.88rem;color:var(--muted)!important}
+.sf-passi{list-style:none;padding:0!important;counter-reset:sf;display:grid;gap:10px}
+.sf-passi li{counter-increment:sf;margin:0!important;position:relative;padding:16px 18px 16px 64px;border-radius:18px;border:1px solid var(--bordo);background:var(--vetro)}
+.sf-passi li::before{content:counter(sf);position:absolute;left:18px;top:15px;width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:var(--fluo);color:var(--btn-ink);font-family:var(--f-testo);font-weight:800;font-size:.95rem}
+.sf-passi b{color:var(--ink)}
+.sf-faq{display:grid;gap:8px;margin-top:16px}
+.sf-faq details{border:1px solid var(--bordo);border-radius:16px;background:var(--vetro);transition:border-color .2s,background .2s}
+.sf-faq details[open]{border-color:var(--bordo-2);background:var(--vetro-2)}
+.sf-faq summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:15px 18px;font-weight:600;color:var(--ink)}
+.sf-faq summary::-webkit-details-marker{display:none}
+.sf-faq summary::after{content:"";flex:none;margin-left:auto;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .25s var(--morbido)}
+.sf-faq details[open] summary::after{transform:rotate(225deg)}
+.sf-faq details p{padding:0 18px 16px;margin:0}
+/* richiamo alla guida: nella pagina principale (Semestre Filtro) e nelle pagine delle tre materie */
+.sf-guida{display:flex;align-items:center;gap:14px;margin-top:14px;padding:14px 18px;border-radius:18px;border:1px solid var(--bordo-2);background:linear-gradient(120deg,rgba(61,245,166,.1),rgba(91,140,255,.1) 55%,rgba(255,77,157,.08));color:var(--ink);text-decoration:none;transition:border-color .2s,transform .35s var(--molla)}
+.sf-guida:hover{border-color:var(--fitc);transform:translateY(-1px)}
+.sf-guida b{display:block;font-family:var(--f-display);font-size:1rem}
+.sf-guida small{display:block;color:var(--ink-2);font-size:.86rem;line-height:1.45}
+.sf-guida svg{flex:none;margin-left:auto}
+.materia-in .sf-guida{margin:30px 0 0}
+
+/* ---------- Sposta i progressi (progressi.html) ---------- */
+.sp-stato{padding:16px 20px;border-radius:16px;border:1px solid var(--bordo-2);background:var(--vetro)}
+.sp-stato b{color:var(--ink)}
+.sp-passi{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:18px}
+.sp-passo{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:24px;border-radius:22px;border:1px solid var(--bordo-2);background:var(--vetro)}
+.sp-passo h2{margin:0!important;font-size:1.2rem}
+.sp-n{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:var(--fluo);color:var(--btn-ink);font-family:var(--f-testo);font-weight:800;font-size:1.05rem}
+.sp-passo .btn-grad,.sp-passo .btn-vetro{margin-top:auto}
+.sp-carica{cursor:pointer;position:relative}
+.sp-carica:focus-within{outline:2px solid var(--fitc);outline-offset:3px}
+.sp-carica input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.sp-esito{width:100%;margin:0!important;padding:12px 14px;border-radius:14px;border:1px solid var(--bordo);background:var(--vetro);font-size:.92rem}
+.sp-esito.ok{border-color:rgba(61,245,166,.45);background:var(--ok-soft)}
+.sp-esito.ko{border-color:rgba(255,107,129,.45);background:rgba(255,107,129,.1)}
+.sp-esito b{color:var(--ink)}
+.sp-vai{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.sp-vai a{padding:4px 12px;border-radius:999px;border:1px solid var(--bordo-2);color:var(--ink)!important;text-decoration:none;font-size:.86rem}
+.sp-vai a:hover{border-color:var(--fitc)}
+.sp-anteprima{width:100%;display:grid;gap:12px;padding:16px;border-radius:16px;border:1px solid var(--bordo-2);background:var(--vetro-2)}
+.sp-ant-t{margin:0!important}
+.sp-ant-t b{color:var(--ink)}
+.sp-lista{list-style:none;margin:0!important;padding:0!important;display:grid;gap:8px}
+.sp-lista li{margin:0!important;display:flex;align-items:center;gap:10px;color:var(--ink)}
+.sp-lista small{display:block;color:var(--muted);font-size:.78rem}
+.sp-orb{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:var(--c);color:var(--btn-ink);font-family:var(--f-display);font-weight:800;font-size:.72rem}
+.sp-nota{margin:0!important;font-size:.86rem}
+.sp-azioni{display:flex;flex-wrap:wrap;gap:8px}
+.sp-azioni .btn-grad,.sp-azioni .btn-vetro{padding:11px 20px;font-size:.94rem}
+/* pagina principale: sotto «Riprendi», il collegamento per spostare i progressi */
+.rip-nota{margin-top:10px;text-align:center;color:var(--muted);font-size:.88rem}
+.rip-nota a{color:var(--ink-2);text-underline-offset:3px}
+.rip-nota a:hover{color:var(--ink)}
+.piede-note a.piede-sposta{color:var(--ink-2);text-underline-offset:3px}
+.piede-note a.piede-sposta:hover{color:var(--ink)}

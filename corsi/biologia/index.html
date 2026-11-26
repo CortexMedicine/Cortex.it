@@ -535,6 +535,21 @@ html.ricaricata main{animation:rientra .45s var(--morbido) both}
 .actions.nav-esame .btn{min-height:48px;font-size:1rem}
 .actions.nav-esame .hint{grid-column:1 / -1}
 @media (max-width:560px){.ex-rapidi{margin-left:0}.actions.nav-esame .btn{font-size:.9rem;padding-inline:.6em}}
+
+/* ---------- fine sessione: condividi il voto, invito gentile a donare (ponte-corso.js) ---------- */
+.cx-condividi{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 18px;padding:16px 18px;border-radius:18px;border:1px solid var(--prim-bordo);background:linear-gradient(120deg,var(--ok-soft),var(--prim-soft) 55%,var(--pink-soft))}
+.cx-condividi-t{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
+.cx-condividi-azioni{display:flex;flex-wrap:wrap;gap:8px}
+.cx-invito{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-radius:18px;border:1px dashed var(--bordo-2);background:var(--vetro)}
+.cx-invito-ico{font-size:1.5rem;line-height:1.2;flex:none}
+.cx-invito-testo{display:grid;gap:10px;min-width:0}
+.cx-invito-testo p{margin:0;color:var(--ink-2);font-size:.93rem;line-height:1.55}
+.cx-invito-testo b{color:var(--ink)}
+.cx-invito-azioni{display:flex;flex-wrap:wrap;gap:6px}
+.cx-sposta{margin:.6em 0 0;color:var(--muted);font-size:.92rem}
+.cx-sposta a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px solid var(--prim-bordo)}
+.cx-sposta a:hover{border-color:currentColor}
+@media (max-width:560px){.cx-condividi{flex-direction:column;align-items:stretch}.cx-condividi-azioni .btn{flex:1}}
 </style>
 
 <script>(function(){try{var t=localStorage.getItem("ripasso-tema");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -3566,7 +3581,9 @@ if(window.claude&&typeof window.claude.use==='function'){window.claude.use('samp
       Parte solo dal clic dell'utente sul pulsante.
    2) In una stessa sessione nessuna domanda compare due volte (anche se lo stesso testo e' in
       paragrafi diversi). Il ripescaggio delle flashcard sbagliate lo toglie costruisci.py.
-   3) Simulazione d'esame: numero di domande scelto liberamente e pulsanti avanti/indietro piu' evidenti. */
+   3) Simulazione d'esame: numero di domande scelto liberamente e pulsanti avanti/indietro piu' evidenti.
+   4) Schermate dei risultati: «Condividi il tuo voto» dopo la simulazione e, ogni tanto, un invito gentile a donare.
+   5) Progressi: collegamento alla pagina per spostarli su un altro dispositivo, e rilettura quando arrivano da li'. */
 ;(function(){
   /* ---------- nessuna domanda ripetuta ---------- */
   const chiaveTesto = it => String((it && (it.q || it.t)) || '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -3689,6 +3706,143 @@ if(window.claude&&typeof window.claude.use==='function'){window.claude.use('samp
       if(e && e.ans != null) succ.classList.add('primary');
     };
   }
+
+  /* ---------- fine sessione: «Condividi il tuo voto» e, ogni tanto, un invito gentile a donare ----------
+     Solo nelle schermate dei risultati, mai durante gli esercizi. */
+  const GIORNO = 86400000;
+  const TOCCO = !!(window.matchMedia && matchMedia('(pointer: coarse)').matches);
+  const numero = k => { try{ return +localStorage.getItem(k) || 0; }catch(e){ return 0; } };
+  const metti = (k, v) => { try{ localStorage.setItem(k, String(v)); }catch(e){} };
+  const SITO = /^https?:$/.test(location.protocol) && !/^(localhost|127\.|\[::1\])/.test(location.hostname)
+    ? location.origin : 'https://www.cortexmed.it';
+  const slug = (location.pathname.match(/\/corsi\/([^\/]+)\//) || [])[1];
+  const indirizzoCorso = SITO + (slug ? '/corsi/' + slug + '/' : '/');
+  const nomeCorso = (document.title.split(' · ')[0] || '').trim() || 'Medicina';
+  const ICONA_CONDIVIDI = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="19" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.3 10.8l7.4-4.4M8.3 13.2l7.4 4.4" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+  function crea(tag, cls, testo){ const el = document.createElement(tag); if(cls) el.className = cls; if(testo) el.textContent = testo; return el; }
+
+  // sul telefono si apre la condivisione (WhatsApp, Telegram, Instagram...), sul computer WhatsApp Web
+  function condividi(testo){
+    if(TOCCO && navigator.share){ navigator.share({text: testo}).catch(() => {}); return; }
+    window.open('https://wa.me/?text=' + encodeURIComponent(testo), '_blank', 'noopener');
+  }
+  function bloccoVoto(s){
+    const n = s.list.length, lode = s.ok === n, passato = s.voto >= 18;
+    const voto = lode ? '30 e lode' : s.voto + '/30';
+    const testo = passato
+      ? 'Ho preso ' + voto + ' nella simulazione d\'esame di ' + nomeCorso + ' su Cortex (' + n + (n === 1 ? ' domanda' : ' domande') + ') 🩺\nAllenati anche tu, è gratis: ' + indirizzoCorso
+      : 'Mi sto allenando per l\'esame di ' + nomeCorso + ' con le simulazioni di Cortex 🩺\nTi sfido: riesci a fare meglio di me? È gratis: ' + indirizzoCorso;
+    const box = crea('div', 'cx-condividi');
+    box.appendChild(crea('p', 'cx-condividi-t', passato ? 'Fai vedere il tuo voto ai compagni' : 'Sfida i tuoi compagni'));
+    const azioni = crea('div', 'cx-condividi-azioni');
+    const vai = crea('button', 'btn primary');
+    vai.type = 'button';
+    vai.innerHTML = ICONA_CONDIVIDI;
+    vai.appendChild(document.createTextNode(TOCCO ? (passato ? 'Condividi il tuo voto' : 'Sfida un compagno') : 'Condividi su WhatsApp'));
+    vai.addEventListener('click', () => condividi(testo));
+    azioni.appendChild(vai);
+    if(!TOCCO && navigator.clipboard){
+      const copia = crea('button', 'btn ghost', 'Copia il messaggio');
+      copia.type = 'button';
+      copia.addEventListener('click', () => {
+        navigator.clipboard.writeText(testo).then(() => {
+          copia.textContent = 'Copiato!';
+          setTimeout(() => { copia.textContent = 'Copia il messaggio'; }, 2200);
+        }).catch(() => {});
+      });
+      azioni.appendChild(copia);
+    }
+    box.appendChild(azioni);
+    return box;
+  }
+
+  // invito a donare: dopo almeno 3 sessioni concluse, al massimo una volta a settimana;
+  // «Non ora» lo mette in pausa per 3 settimane, un clic su «Offrimi un caffè» per 2 mesi
+  const K_FINITE = 'cortex-sessioni-finite', K_ULTIMO = 'cortex-invito-ultimo', K_PAUSA = 'cortex-invito-pausa';
+  function decidiInvito(s){
+    if(s.__invito !== undefined) return s.__invito;   // la stessa schermata si ridisegna (filtri): decido una volta sola
+    const finite = numero(K_FINITE) + 1, ora = Date.now();
+    metti(K_FINITE, finite);
+    s.__invito = finite >= 3 && ora - numero(K_ULTIMO) >= 7 * GIORNO && ora >= numero(K_PAUSA);
+    if(s.__invito) metti(K_ULTIMO, ora);
+    return s.__invito;
+  }
+  function bloccoInvito(s){
+    const box = crea('aside', 'cx-invito');
+    box.setAttribute('aria-label', 'Sostieni Cortex');
+    box.appendChild(crea('span', 'cx-invito-ico', '☕')).setAttribute('aria-hidden', 'true');
+    const testo = crea('div', 'cx-invito-testo');
+    const p = crea('p');
+    p.appendChild(crea('b', '', 'Cortex ti sta aiutando? '));
+    p.appendChild(document.createTextNode('È gratis e lo porto avanti da solo, nel tempo libero. Se ti va, puoi offrirmi un caffè: mi aiuti a tenere acceso il sito e a preparare nuovi corsi.'));
+    testo.appendChild(p);
+    const azioni = crea('div', 'cx-invito-azioni');
+    const dona = crea('a', 'btn sm', 'Offrimi un caffè');
+    dona.href = '../../sostieni.html'; dona.target = '_blank'; dona.rel = 'noopener';
+    dona.addEventListener('click', () => metti(K_PAUSA, Date.now() + 60 * GIORNO));
+    const no = crea('button', 'btn sm ghost', 'Non ora');
+    no.type = 'button';
+    no.addEventListener('click', () => { metti(K_PAUSA, Date.now() + 21 * GIORNO); s.__invito = false; box.remove(); });
+    azioni.append(dona, no);
+    testo.appendChild(azioni);
+    box.appendChild(testo);
+    return box;
+  }
+
+  function arricchisci(conVoto){
+    const s = SESS; if(!s) return;
+    const scheda = document.querySelector('#sess .qcard'); if(!scheda) return;
+    if(conVoto && s.type === 'exam' && s.done && s.list && s.list.length){
+      const testa = scheda.querySelector('.result-head'), blocco = bloccoVoto(s);
+      if(testa) testa.after(blocco); else scheda.prepend(blocco);
+    }
+    if(decidiInvito(s)) scheda.appendChild(bloccoInvito(s));
+  }
+  const dopoFine = (orig, conVoto) => function(){
+    const r = orig.apply(this, arguments);
+    try{ arricchisci(conVoto); }catch(e){}
+    return r;
+  };
+  if(typeof renderExamResult === 'function') renderExamResult = dopoFine(renderExamResult, true);
+  if(typeof renderQuizEnd === 'function') renderQuizEnd = dopoFine(renderQuizEnd, false);
+  if(typeof renderFlashEnd === 'function') renderFlashEnd = dopoFine(renderFlashEnd, false);
+  if(typeof renderOpenEnd === 'function') renderOpenEnd = dopoFine(renderOpenEnd, false);
+  if(typeof renderCaseEnd === 'function') renderCaseEnd = dopoFine(renderCaseEnd, false);
+  if(typeof renderCmpEnd === 'function') renderCmpEnd = dopoFine(renderCmpEnd, false);
+
+  /* ---------- progressi da un altro dispositivo ----------
+     Nella scheda Progressi c'e' il collegamento alla pagina per spostarli. Se in un'altra scheda
+     la pagina progressi.html unisce quelli di un altro dispositivo, questo corso li rilegge subito,
+     cosi' chiudendosi non li sovrascrive con quelli vecchi che ha in memoria. */
+  if(typeof renderProgress === 'function'){
+    const progressOrig = renderProgress;
+    renderProgress = function(){
+      const r = progressOrig.apply(this, arguments);
+      try{
+        const v = document.getElementById('v-progressi'), intro = v && v.querySelector('.intro');
+        if(intro && !intro.querySelector('.cx-sposta')){
+          const p = crea('p', 'cx-sposta', 'Studi anche su un altro dispositivo? ');
+          const a = crea('a', '', 'Sposta i progressi');
+          a.href = '../../progressi.html';
+          p.appendChild(a);
+          intro.appendChild(p);
+        }
+      }catch(e){}
+      return r;
+    };
+    const vProg = document.getElementById('v-progressi');
+    if(vProg && !vProg.hidden) renderProgress();
+  }
+  if(typeof loadLocal === 'function' && typeof LS === 'string'){
+    addEventListener('storage', e => {
+      if(e.key !== LS || !e.newValue) return;
+      try{
+        loadLocal();
+        const vProg = document.getElementById('v-progressi');
+        if(vProg && !vProg.hidden && typeof renderProgress === 'function') renderProgress();
+      }catch(err){}
+    });
+  }
 })();
 })();
 </script>
@@ -3719,11 +3873,11 @@ if(window.claude&&typeof window.claude.use==='function'){window.claude.use('samp
   if(main){
     var piede = crea('footer', 'piede-corso', '<p>Cortex</p>');
     main.parentNode.insertBefore(piede, main.nextSibling);
-    // link alle pagine Privacy e Contatti del sito (servono in ogni pagina)
+    // link alle pagine del sito: spostare i progressi, sostenere Cortex, Privacy e Contatti (servono in ogni pagina)
     var info = doc.createElement('nav');
     info.className = 'piede-corso-link';
     info.setAttribute('aria-label', 'Informazioni sul sito');
-    info.innerHTML = '<a href="../../privacy.html">Privacy e cookie</a><a href="../../contatti.html">Contatti</a>';
+    info.innerHTML = '<a href="../../progressi.html">Sposta i progressi</a><a href="../../sostieni.html">Sostieni Cortex</a><a href="../../privacy.html">Privacy e cookie</a><a href="../../contatti.html">Contatti</a>';
     piede.parentNode.insertBefore(info, piede);
   }
 

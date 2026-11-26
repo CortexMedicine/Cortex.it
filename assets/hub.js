@@ -290,7 +290,9 @@ function semestreHtml(s){
   // il Semestre Filtro e' uno solo: niente "1°", al suo posto la sigla
   const filtro = anno===0;
   const testa = filtro ? '<h4><span class="sem-n">SF</span>le materie del filtro</h4>' : `<h4><span class="sem-n">${s}°</span>semestre</h4>`;
-  return `<section class="semestre${lista.length?'':' vuota'}${filtro?' filtro':''}" data-n="${s}" aria-label="${filtro?'Semestre Filtro':s+'° semestre'}"><div class="sem-testa">${testa}${k?`<span class="pill">${k} ${plur(k,'corso','corsi')}</span>`:''}</div><div class="sem-lista">${corpo}</div></section>`;
+  // nel Semestre Filtro, sotto i corsi, la guida agli esami (date, formato, come allenarsi)
+  const guida = filtro ? `<a class="sf-guida" href="semestre-filtro.html"><span><b>Guida al Semestre Filtro</b><small>Come sono gli esami, le date degli appelli e come allenarti su tutte e tre le materie.</small></span>${FRECCIA}</a>` : '';
+  return `<section class="semestre${lista.length?'':' vuota'}${filtro?' filtro':''}" data-n="${s}" aria-label="${filtro?'Semestre Filtro':s+'° semestre'}"><div class="sem-testa">${testa}${k?`<span class="pill">${k} ${plur(k,'corso','corsi')}</span>`:''}</div><div class="sem-lista">${corpo}</div>${guida}</section>`;
 }
 function semScelta(s){
   const lista = CORSI.filter(c=>c.href && sta(c, anno, s));
@@ -370,7 +372,8 @@ function disegnaRiprendi(){
   elRiprendi.innerHTML = `<a class="riprendi-card" href="${esc(c.href)}" style="--c:${esc(c.colore)}">
     <span class="rip-anello">${anello(p,72)}<span class="rip-pct">${p.pctVisti}%</span></span>
     <span class="rip-testo"><span class="rip-occhiello">Riprendi da dove eri rimasto</span><span class="rip-titolo">${esc(c.titolo)}</span><span class="rip-det">${dettaglio}${p.ultimo?' · ultimo studio '+quando(p.ultimo):''}</span></span>
-    <span class="btn-grad">Continua ${FRECCIA}</span></a>`;
+    <span class="btn-grad">Continua ${FRECCIA}</span></a>
+    <p class="rip-nota">Studi anche su un altro dispositivo? <a href="progressi.html">Sposta i progressi</a></p>`;
   elRiprendi.hidden = false;
 }
 function disegnaNumeri(){
