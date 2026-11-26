@@ -833,4 +833,9 @@ if(daIndirizzo()!==null && !ricarica){
   // quando arrivano i caratteri l'altezza dell'apertura cambia: riallineo, se nel frattempo non hai scorso tu
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ if(Math.abs(window.scrollY-fermo) < 4) vai(); });
 }
+
+// menu del telefono: si chiude scegliendo una voce, toccando fuori o con Esc
+document.querySelectorAll('.menu-tel').forEach(m=>m.addEventListener('click', e=>{ if(e.target.closest('a')) m.open = false; }));
+document.addEventListener('click', e=>{ document.querySelectorAll('.menu-tel[open]').forEach(m=>{ if(!m.contains(e.target)) m.open = false; }); });
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape') document.querySelectorAll('.menu-tel[open]').forEach(m=>{ m.open = false; }); });
 })();

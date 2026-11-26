@@ -101,4 +101,20 @@ if(binario && comandi){
 
 // con "riduci animazioni" le onde restano ferme
 if(RIDOTTO) $$('svg').forEach(s=>{ try{ s.pauseAnimations(); }catch(e){} });
+
+// menu del telefono: si chiude scegliendo una voce, toccando fuori o con Esc
+document.querySelectorAll('.menu-tel').forEach(m=>m.addEventListener('click', e=>{ if(e.target.closest('a')) m.open = false; }));
+document.addEventListener('click', e=>{ document.querySelectorAll('.menu-tel[open]').forEach(m=>{ if(!m.contains(e.target)) m.open = false; }); });
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape') document.querySelectorAll('.menu-tel[open]').forEach(m=>{ m.open = false; }); });
+
+// "Condividi Cortex": sul telefono apre la condivisione (WhatsApp, Telegram...), sul computer copia il link
+document.querySelectorAll('[data-condividi]').forEach(b=>b.addEventListener('click', async ()=>{
+  const dati = {title:'Cortex', text:'Quiz, flashcard e casi clinici per ogni esame di Medicina, gratis:', url:'https://www.cortexmed.it/'};
+  try{
+    if(navigator.share){ await navigator.share(dati); return; }
+    await navigator.clipboard.writeText(dati.url);
+    const t = b.querySelector('.aiuto-t'); const prima = t.textContent;
+    t.textContent = 'Link copiato!'; setTimeout(()=>{ t.textContent = prima; }, 2200);
+  }catch(e){}
+}));
 })();
