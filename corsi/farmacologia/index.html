@@ -105,6 +105,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 html body .rm-nav{background:var(--bg-2);border-bottom:1px solid var(--bordo);font-family:var(--f-body)}
 html body .rm-back{color:var(--ink)}
 html body .rm-back:hover{background:var(--vetro-2);color:var(--ink)}
+html body .rm-prog{color:var(--ink-2);font-weight:600;font-size:.86rem;padding:6px 12px;border-radius:999px;text-decoration:none;transition:background .15s,color .15s}
+html body .rm-prog:hover{background:var(--vetro-2);color:var(--ink)}
 html body .rm-dove{color:var(--muted);font-family:var(--f-mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500}
 
 /* ---------- testata ---------- */
@@ -526,12 +528,14 @@ html.ricaricata main{animation:rientra .45s var(--morbido) both}
 .rm-back:hover{background:var(--surface,#FFFFFF);color:var(--ink,#15292B)}
 .rm-back svg{width:18px;height:18px;flex:none;transition:transform .15s}
 .rm-back:hover svg{transform:translateX(-2px)}
+.rm-prog{color:var(--muted,var(--ink-2,#5B6F71));font-weight:600;text-decoration:none;padding:6px 8px;border-radius:8px}
+.rm-prog:hover{color:var(--ink,#15292B);background:var(--surface,#FFFFFF)}
 .rm-dove{margin-left:auto;color:var(--muted,var(--ink-2,#5B6F71));font-weight:600;white-space:nowrap}
 @media (max-width:640px){.rm-dove .rm-lungo{display:none}}
 @media (prefers-reduced-motion:reduce){.rm-back,.rm-back svg{transition:none}}
 </style>
 </head><body>
-<nav class="rm-nav" aria-label="Cortex"><div class="rm-nav-in"><a class="rm-back" href="../../index.html#anno-3-s1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tutti i corsi</a><span class="rm-dove">III anno<span class="rm-lungo"> · 1° semestre</span></span></div></nav>
+<nav class="rm-nav" aria-label="Cortex"><div class="rm-nav-in"><a class="rm-back" href="../../index.html#anno-3-s1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tutti i corsi</a><a class="rm-prog" href="../../materie/farmacologia.html">Programma</a><span class="rm-dove">III anno<span class="rm-lungo"> · 1° semestre</span></span></div></nav>
 
 <script>(function(){try{var t=localStorage.getItem("ripasso-tema");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 <header class="top"><div class="wrap top-in">

@@ -2,8 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.cortexmed.it/</loc></url>
   <url><loc>https://www.cortexmed.it/come-funziona.html</loc></url>
+  <url><loc>https://www.cortexmed.it/chi-siamo.html</loc></url>
   <url><loc>https://www.cortexmed.it/privacy.html</loc></url>
   <url><loc>https://www.cortexmed.it/contatti.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/biologia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/chimica.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/fisica.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/anatomia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/istologia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/genetica.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/immunologia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/farmacologia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/patologia-generale.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/endocrinologia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/microbiologia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/cardiologia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/nefrologia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/ortopedia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/dermatologia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/gastroenterologia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/reumatologia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/organi-di-senso.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/neurologia-e-neurochirurgia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/psichiatria.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/anatomia-patologica.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/pediatria.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/ginecologia-e-ostetricia.html</loc></url>
+  <url><loc>https://www.cortexmed.it/materie/medicina-pubblica.html</loc></url>
   <url><loc>https://www.cortexmed.it/corsi/biologia/</loc></url>
   <url><loc>https://www.cortexmed.it/corsi/chimica/</loc></url>
   <url><loc>https://www.cortexmed.it/corsi/fisica/</loc></url>

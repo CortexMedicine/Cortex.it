@@ -49,7 +49,8 @@ if(piede){
   const corsi = ((window.CATALOGO||{}).corsi||[]).filter(c=>c.href);
   const ROMANI = ['I','II','III','IV','V','VI'];
   const anni = [{n:0, nome:'Semestre Filtro', ancora:'semestre-filtro'}].concat(ROMANI.map((r,i)=>({n:i+1, nome:r+' anno', ancora:'anno-'+(i+1)})));
-  piede.innerHTML = anni.map(a=>{ const k = corsi.filter(c=>[[c.anno]].concat(c.altri||[]).some(p=>p[0]===a.n)).length; return `<a href="index.html#${a.ancora}" class="${k?'ha':''}">${a.nome}${k?` · ${k}`:''}</a>`; }).join('');
+  const radice = piede.dataset.radice || '';   // "../" nelle pagine delle materie, "/" nella pagina 404
+  piede.innerHTML = anni.map(a=>{ const k = corsi.filter(c=>[[c.anno]].concat(c.altri||[]).some(p=>p[0]===a.n)).length; return `<a href="${radice}index.html#${a.ancora}" class="${k?'ha':''}">${a.nome}${k?` · ${k}`:''}</a>`; }).join('');
 }
 
 // carosello dei tipi di esercizio: un riquadro alla volta, con frecce ed etichette per spostarsi
