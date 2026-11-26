@@ -3584,15 +3584,15 @@ if(window.claude&&typeof window.claude.use==='function'){window.claude.use('samp
     return box;
   }
 
-  // invito a donare: dopo almeno 3 sessioni concluse, al massimo una volta a settimana;
-  // «Non ora» lo mette in pausa per 3 settimane, un clic su «Offrimi un caffè» per 2 mesi
-  const K_FINITE = 'cortex-sessioni-finite', K_ULTIMO = 'cortex-invito-ultimo', K_PAUSA = 'cortex-invito-pausa';
+  // invito a donare: compare ogni 3 sessioni concluse (alla 3a, 6a, 9a...), senza limiti di tempo;
+  // «Non ora» lo mette in pausa per 2 ore, un clic su «Offrimi un caffè» per 2 settimane
+  const K_FINITE = 'cortex-sessioni-finite', K_PAUSA = 'cortex-invito-pausa';
+  const ORA = 3600000;
   function decidiInvito(s){
     if(s.__invito !== undefined) return s.__invito;   // la stessa schermata si ridisegna (filtri): decido una volta sola
-    const finite = numero(K_FINITE) + 1, ora = Date.now();
+    const finite = numero(K_FINITE) + 1;
     metti(K_FINITE, finite);
-    s.__invito = finite >= 3 && ora - numero(K_ULTIMO) >= 7 * GIORNO && ora >= numero(K_PAUSA);
-    if(s.__invito) metti(K_ULTIMO, ora);
+    s.__invito = finite % 3 === 0 && Date.now() >= numero(K_PAUSA);
     return s.__invito;
   }
   function bloccoInvito(s){
@@ -3607,10 +3607,10 @@ if(window.claude&&typeof window.claude.use==='function'){window.claude.use('samp
     const azioni = crea('div', 'cx-invito-azioni');
     const dona = crea('a', 'btn sm', 'Offrimi un caffè');
     dona.href = '../../sostieni.html'; dona.target = '_blank'; dona.rel = 'noopener';
-    dona.addEventListener('click', () => metti(K_PAUSA, Date.now() + 60 * GIORNO));
+    dona.addEventListener('click', () => metti(K_PAUSA, Date.now() + 14 * GIORNO));
     const no = crea('button', 'btn sm ghost', 'Non ora');
     no.type = 'button';
-    no.addEventListener('click', () => { metti(K_PAUSA, Date.now() + 21 * GIORNO); s.__invito = false; box.remove(); });
+    no.addEventListener('click', () => { metti(K_PAUSA, Date.now() + 2 * ORA); s.__invito = false; box.remove(); });
     azioni.append(dona, no);
     testo.appendChild(azioni);
     box.appendChild(testo);
