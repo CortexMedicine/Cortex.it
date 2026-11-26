@@ -850,3 +850,5 @@ a.nav-cerca{text-decoration:none}
 .rip-nota a:hover{color:var(--ink)}
 .piede-note a.piede-sposta{color:var(--ink-2);text-underline-offset:3px}
 .piede-note a.piede-sposta:hover{color:var(--ink)}
+/* con cinque voci la barra non ci sta sotto i 900 px: da lì in giù le voci passano nel menu ☰ */
+@media (max-width:900px){.nav-link{display:none}.menu-tel{display:block}}
